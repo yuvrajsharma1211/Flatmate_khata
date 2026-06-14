@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: flatmate_khata_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: flatmate_khata
+    ports:
+      - "5433:5432"
+    volumes:
+      - flatmate_khata_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d flatmate_khata"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  flatmate_khata_postgres_data:

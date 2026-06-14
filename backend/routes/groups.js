@@ -134,9 +134,11 @@ async function getGroupAccess(groupId, userId) {
     include: {
       members: {
         select: {
+          id: true,
           user_id: true,
           joined_at: true,
-          left_at: true
+          left_at: true,
+          user: { select: { id: true, name: true, email: true } }
         }
       },
       settings: true,
