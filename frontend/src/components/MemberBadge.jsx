@@ -1,12 +1,12 @@
 import React from 'react';
 
 const PALETTE = [
-  { bg: '#DCE8E5', fg: '#23514B' },
-  { bg: '#E6D7C4', fg: '#6D4A2B' },
-  { bg: '#E2EBD8', fg: '#4F7A5E' },
-  { bg: '#F1D9CE', fg: '#A44E2B' },
-  { bg: '#EFE2C8', fg: '#946C22' },
-  { bg: '#D9D7E8', fg: '#4A4768' }
+  { bg: 'rgba(139, 92, 246, 0.18)', fg: '#c4b5fd' },
+  { bg: 'rgba(244, 63, 94, 0.14)', fg: '#fb7185' },
+  { bg: 'rgba(34, 197, 94, 0.14)', fg: '#86efac' },
+  { bg: 'rgba(251, 191, 36, 0.14)', fg: '#fbbf24' },
+  { bg: 'rgba(56, 189, 248, 0.14)', fg: '#7dd3fc' },
+  { bg: 'rgba(148, 163, 184, 0.14)', fg: '#cbd5e1' }
 ];
 
 function hashName(name) {
@@ -29,7 +29,7 @@ const MemberBadge = ({ name }) => {
 
   return (
     <span
-      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-paper-line text-xs font-semibold mono-data"
+      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-xs font-semibold mono-data"
       style={{ backgroundColor: bg, color: fg }}
       title={safeName}
       aria-label={safeName}

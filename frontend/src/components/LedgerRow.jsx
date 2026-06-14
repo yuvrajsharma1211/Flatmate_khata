@@ -38,7 +38,7 @@ const LedgerRow = ({
 
   return (
     <div
-      className={`border-b border-dashed border-paper-line ${compact ? 'py-2' : 'py-3'} ${interactive ? 'cursor-pointer hover:bg-teal-soft/30' : ''}`}
+      className={`border-b border-dashed border-paper-line ${compact ? 'py-2' : 'py-3'} ${interactive ? 'cursor-pointer hover:bg-white/[0.04]' : ''}`}
       onClick={interactive ? onClick : undefined}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}

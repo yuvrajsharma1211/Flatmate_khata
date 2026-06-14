@@ -31,16 +31,16 @@
   --text-secondary: #cbd5e1;
   --text-muted: #64748b;
 
-  /* Ledger surfaces */
-  --paper: #f5efe3;
-  --paper-line: #ded4c2;
-  --ink: #1f2a2e;
-  --ink-muted: #6f7a7d;
-  --teal: #1f6b63;
-  --teal-soft: #e2efec;
-  --sage: #4f7a5e;
-  --rust: #a44e2b;
-  --gold: #946c22;
+  /* Dark ledger surfaces */
+  --paper: #0b0f17;
+  --paper-line: rgba(255, 255, 255, 0.10);
+  --ink: #f8fafc;
+  --ink-muted: #94a3b8;
+  --teal: #c4b5fd;
+  --teal-soft: rgba(139, 92, 246, 0.14);
+  --sage: #86efac;
+  --rust: #fb7185;
+  --gold: #fbbf24;
 }
 
 * {
@@ -129,17 +129,19 @@ h1, h2, h3, h4, h5, h6 {
 @layer components {
   .ledger-paper {
     border: 1px solid var(--paper-line);
-    background: #fffdf8;
+    background: rgba(21, 28, 44, 0.5);
     color: var(--ink);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .receipt-zigzag {
     color: var(--ink);
-    background-image:
-      linear-gradient(135deg, transparent 75%, rgba(31, 42, 46, 0.06) 75%),
-      linear-gradient(225deg, transparent 75%, rgba(31, 42, 46, 0.06) 75%);
-    background-position: top left, top left;
-    background-size: 12px 12px;
+    background:
+      linear-gradient(135deg, rgba(139, 92, 246, 0.10), rgba(244, 63, 94, 0.05)),
+      rgba(21, 28, 44, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 }
 

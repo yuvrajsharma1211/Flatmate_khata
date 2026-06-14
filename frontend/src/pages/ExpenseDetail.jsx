@@ -40,22 +40,22 @@ const ExpenseDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper">
-        <p className="mono-data text-sm uppercase tracking-[0.1em] text-ink-muted">Loading expense...</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#0b0f17]">
+        <p className="mono-data text-sm uppercase tracking-[0.1em] text-gray-400">Loading expense...</p>
       </div>
     );
   }
 
   if (error || !expense) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper p-4">
-        <div className="w-full max-w-lg border border-paper-line bg-[#fffdf8] p-6">
-          <h1 className="text-2xl text-teal">Expense not available</h1>
+      <div className="flex min-h-screen items-center justify-center bg-[#0b0f17] p-4">
+        <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-glass p-6 shadow-glass">
+          <h1 className="text-2xl font-bold text-white">Expense not available</h1>
           <p className="mt-2 text-sm text-rust">{error || 'Unknown error'}</p>
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="mt-4 border border-teal bg-teal-soft px-4 py-2 text-sm font-semibold text-teal"
+            className="mt-4 rounded-xl border border-brand-500/30 bg-brand-600/15 px-4 py-2 text-sm font-semibold text-brand-300"
           >
             Go back
           </button>
@@ -65,19 +65,19 @@ const ExpenseDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-paper p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-4xl border border-paper-line bg-[#fffdf8] p-5">
+    <div className="min-h-screen bg-[#0b0f17] p-4 text-white sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-glass-card p-5 shadow-glass">
         <button
           type="button"
-          onClick={() => navigate(`/groups/${expense.group_id}`)}
-          className="mono-data text-xs uppercase tracking-[0.12em] text-ink-muted hover:text-teal"
+          onClick={() => navigate(`/group/${expense.group_id}`)}
+          className="mono-data text-xs uppercase tracking-[0.12em] text-gray-400 hover:text-brand-300"
         >
           back to group
         </button>
 
-        <header className="mt-4 border-b border-paper-line pb-4">
-          <h1 className="text-3xl text-teal">{expense.description}</h1>
-          <p className="mt-1 text-sm text-ink-muted">Paid by {expense.payer?.name || 'Unknown'} on {new Date(expense.expense_date).toLocaleDateString('en-GB')}</p>
+        <header className="mt-4 border-b border-white/10 pb-4">
+          <h1 className="text-3xl font-bold text-white">{expense.description}</h1>
+          <p className="mt-1 text-sm text-gray-400">Paid by {expense.payer?.name || 'Unknown'} on {new Date(expense.expense_date).toLocaleDateString('en-GB')}</p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <StatusPill label={expense.split_type} tone="neutral" />
             <StatusPill label={expense.status} tone={expense.status === 'voided' ? 'negative' : 'positive'} />
@@ -86,8 +86,8 @@ const ExpenseDetail = () => {
         </header>
 
         <section className="mt-5">
-          <h2 className="text-xl text-teal">Split Breakdown</h2>
-          <p className="mt-1 text-sm text-ink-muted">Each row is part of the total, so balances can be verified without hidden math.</p>
+          <h2 className="text-xl font-bold text-white">Split Breakdown</h2>
+          <p className="mt-1 text-sm text-gray-400">Each row is part of the total, so balances can be verified without hidden math.</p>
           <div className="mt-3">
             {expense.splits?.map(split => (
               <LedgerRow
@@ -102,7 +102,7 @@ const ExpenseDetail = () => {
             ))}
           </div>
 
-          <div className="mt-4 grid gap-2 border border-paper-line bg-paper p-3 text-sm sm:grid-cols-2">
+          <div className="mt-4 grid gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-sm sm:grid-cols-2">
             <p className="text-ink-muted">Original amount: <span className="mono-data text-ink">{expense.currency} {toNumber(expense.original_amount).toFixed(2)}</span></p>
             <p className="text-ink-muted">Exchange rate: <span className="mono-data text-ink">{toNumber(expense.exchange_rate).toFixed(4)}</span></p>
             <p className="text-ink-muted">Amount in base: <span className="mono-data text-ink">INR {toNumber(expense.amount_base).toFixed(2)}</span></p>
@@ -110,7 +110,7 @@ const ExpenseDetail = () => {
           </div>
 
           {expense.notes ? (
-            <div className="mt-4 border border-paper-line bg-paper p-3 text-sm text-ink">
+            <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-sm text-ink">
               <p className="text-xs uppercase tracking-[0.1em] text-ink-muted">Notes</p>
               <p className="mt-1">{expense.notes}</p>
             </div>

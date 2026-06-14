@@ -10,20 +10,20 @@ export default {
         darkbg: 'var(--darkbg)',
         darksurface: 'var(--darksurface)',
         paper: {
-          DEFAULT: '#f5efe3',
-          line: '#ded4c2'
+          DEFAULT: '#0b0f17',
+          line: 'rgba(255, 255, 255, 0.10)'
         },
         ink: {
-          DEFAULT: '#1f2a2e',
-          muted: '#6f7a7d'
+          DEFAULT: '#f8fafc',
+          muted: '#94a3b8'
         },
         teal: {
-          DEFAULT: '#1f6b63',
-          soft: '#e2efec'
+          DEFAULT: '#c4b5fd',
+          soft: 'rgba(139, 92, 246, 0.14)'
         },
-        sage: '#4f7a5e',
-        rust: '#a44e2b',
-        gold: '#946c22',
+        sage: '#86efac',
+        rust: '#fb7185',
+        gold: '#fbbf24',
         brand: {
           50: 'var(--brand-50)',
           100: 'var(--brand-100)',

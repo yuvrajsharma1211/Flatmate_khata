@@ -105,22 +105,22 @@ const GroupDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper">
-        <p className="mono-data text-sm uppercase tracking-[0.12em] text-ink-muted">Loading ledger...</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#0b0f17]">
+        <p className="mono-data text-sm uppercase tracking-[0.12em] text-gray-400">Loading ledger...</p>
       </div>
     );
   }
 
   if (error || !group) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper p-4">
-        <div className="w-full max-w-lg border border-paper-line bg-[#fffdf8] p-6">
-          <h2 className="text-2xl text-teal">Unable to open ledger</h2>
-          <p className="mt-3 text-sm text-ink-muted">{error || 'Group not found.'}</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#0b0f17] p-4">
+        <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-glass p-6 shadow-glass">
+          <h2 className="text-2xl font-bold text-white">Unable to open ledger</h2>
+          <p className="mt-3 text-sm text-gray-400">{error || 'Group not found.'}</p>
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="mt-5 border border-teal bg-teal-soft px-4 py-2 text-sm font-semibold text-teal"
+            className="mt-5 rounded-xl border border-brand-500/30 bg-brand-600/15 px-4 py-2 text-sm font-semibold text-brand-300"
           >
             Back to Dashboard
           </button>
@@ -130,7 +130,7 @@ const GroupDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-paper text-ink lg:grid lg:grid-cols-[256px_1fr]">
+    <div className="min-h-screen bg-[#0b0f17] text-white lg:grid lg:grid-cols-[256px_1fr]">
       <SidebarShell
         groupName={group.name}
         activeSection={activeSection}
@@ -139,31 +139,31 @@ const GroupDetail = () => {
       />
 
       <main className="p-4 sm:p-6 lg:p-8">
-        <header className="mb-6 border-b border-paper-line pb-4">
-          <h2 className="text-3xl text-teal">Household Khata</h2>
-          <p className="mt-1 text-sm text-ink-muted">Track shared expenses, passbook balances, and settlement trails.</p>
+        <header className="mb-6 border-b border-white/10 pb-4">
+          <h2 className="text-3xl font-extrabold tracking-tight text-white">Household Khata</h2>
+          <p className="mt-1 text-sm text-gray-400">Track shared expenses, passbook balances, and settlement trails.</p>
         </header>
 
         {activeSection === 'expenses' ? (
           <section className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="ledger-paper p-3">
+              <div className="ledger-paper rounded-xl p-4 shadow-glass">
                 <p className="text-xs uppercase tracking-[0.12em] text-ink-muted">Total Expenses</p>
                 <p className="mono-data mt-2 text-xl text-ink">INR {totalExpenses.toFixed(2)}</p>
               </div>
-              <div className="ledger-paper p-3">
+              <div className="ledger-paper rounded-xl p-4 shadow-glass">
                 <p className="text-xs uppercase tracking-[0.12em] text-ink-muted">Total Settled</p>
                 <p className="mono-data mt-2 text-xl text-sage">INR {totalSettlements.toFixed(2)}</p>
               </div>
-              <div className="ledger-paper p-3">
+              <div className="ledger-paper rounded-xl p-4 shadow-glass">
                 <p className="text-xs uppercase tracking-[0.12em] text-ink-muted">Base Currency</p>
                 <p className="mono-data mt-2 text-xl text-teal">{group.base_currency}</p>
               </div>
             </div>
 
-            <div className="border border-paper-line bg-[#fffdf8] p-4">
+            <div className="rounded-2xl border border-white/10 bg-glass-card p-5 shadow-glass">
               <div className="mb-2 flex items-center justify-between">
-                <h3 className="text-xl text-teal">Expense Register</h3>
+                <h3 className="text-xl font-bold text-white">Expense Register</h3>
                 <StatusPill label={`${group.expenses.length} entries`} tone="neutral" />
               </div>
 
@@ -193,8 +193,8 @@ const GroupDetail = () => {
               )}
             </div>
 
-            <div className="receipt-zigzag border border-paper-line bg-[#f9f3e4] p-4">
-              <h4 className="text-lg text-teal">Settle Up Snapshot</h4>
+            <div className="receipt-zigzag rounded-2xl border border-white/10 p-5 shadow-glass">
+              <h4 className="text-lg font-bold text-white">Settle Up Snapshot</h4>
               {debts.length === 0 ? (
                 <p className="mt-2 text-sm text-ink-muted">No pending debts after simplification.</p>
               ) : (
@@ -214,10 +214,10 @@ const GroupDetail = () => {
         ) : null}
 
         {activeSection === 'balances' ? (
-          <section className="border border-paper-line bg-[#fffdf8] p-4">
+          <section className="rounded-2xl border border-white/10 bg-glass-card p-5 shadow-glass">
             <div className="mb-3">
-              <h3 className="text-xl text-teal">Passbook Balances</h3>
-              <p className="text-sm text-ink-muted">Expand a row to inspect exactly how each balance was computed.</p>
+              <h3 className="text-xl font-bold text-white">Passbook Balances</h3>
+              <p className="text-sm text-gray-400">Expand a row to inspect exactly how each balance was computed.</p>
             </div>
 
             {balances.length === 0 ? (
@@ -241,8 +241,8 @@ const GroupDetail = () => {
         ) : null}
 
         {activeSection === 'members' ? (
-          <section className="border border-paper-line bg-[#fffdf8] p-4">
-            <h3 className="mb-3 text-xl text-teal">Members and Membership Dates</h3>
+          <section className="rounded-2xl border border-white/10 bg-glass-card p-5 shadow-glass">
+            <h3 className="mb-3 text-xl font-bold text-white">Members and Membership Dates</h3>
             <div className="space-y-2">
               {memberList.map(member => (
                 <div key={member.id} className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-3 border-b border-dashed border-paper-line py-2">
@@ -261,17 +261,17 @@ const GroupDetail = () => {
         ) : null}
 
         {activeSection === 'import' ? (
-          <section className="border border-paper-line bg-[#fffdf8] p-4">
-            <h3 className="text-xl text-teal">Import and Review</h3>
-            <p className="mt-2 text-sm text-ink-muted">Review anomalies and import batches before posting to the ledger.</p>
+          <section className="rounded-2xl border border-white/10 bg-glass-card p-5 shadow-glass">
+            <h3 className="text-xl font-bold text-white">Import and Review</h3>
+            <p className="mt-2 text-sm text-gray-400">Review anomalies and import batches before posting to the ledger.</p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <Link to="/import-review" className="border border-teal bg-teal-soft px-4 py-2 text-sm font-semibold text-teal">
+              <Link to="/import-review" className="rounded-xl border border-brand-500/30 bg-brand-600/15 px-4 py-2 text-sm font-semibold text-brand-300">
                 Open Import Review
               </Link>
               {group.settings.map(setting => (
-                <div key={setting.id} className="inline-flex items-center gap-2 border border-paper-line px-3 py-1 text-xs">
-                  <span className="text-ink-muted">{prettifySettingKey(setting.key)}</span>
-                  <span className="mono-data text-ink">{setting.value}</span>
+                <div key={setting.id} className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1 text-xs">
+                  <span className="text-gray-400">{prettifySettingKey(setting.key)}</span>
+                  <span className="mono-data text-white">{setting.value}</span>
                 </div>
               ))}
             </div>

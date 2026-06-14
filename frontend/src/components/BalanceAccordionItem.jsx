@@ -42,7 +42,7 @@ const BalanceAccordionItem = ({
       </button>
 
       {isOpen ? (
-        <div className="mb-3 ml-11 rounded-sm border border-paper-line bg-[#fffdf8] p-3">
+        <div className="mb-3 ml-11 rounded-xl border border-white/10 bg-white/[0.03] p-3">
           {isLoading ? <p className="text-sm text-ink-muted">Loading passbook lines...</p> : null}
           {error ? <p className="text-sm text-rust">{error}</p> : null}
           {!isLoading && !error && breakdown.length === 0 ? (
