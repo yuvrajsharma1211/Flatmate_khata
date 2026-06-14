@@ -1,0 +1,121 @@
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import api, { setAuthToken } from '../utils/api';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      const { token, user } = response.data;
+      
+      setAuthToken(token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      navigate('/');
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.error || 'Invalid credentials or connection error.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#0b0f17] px-4 relative overflow-hidden">
+      {/* Decorative gradients */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-brand-900/20 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-accent-500/10 blur-[120px] pointer-events-none"></div>
+
+      <div className="w-full max-w-md bg-glass p-8 rounded-2xl shadow-glass border border-white/5 relative z-10">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-600/20 border border-brand-500/30 mb-4 shadow-inner">
+            <span className="text-3xl">💸</span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white font-sans">
+            Flatmate <span className="text-gradient">Khata</span>
+          </h1>
+          <p className="text-gray-400 mt-2 text-sm font-sans">
+            Settle bills, track balances, skip the awkward talks
+          </p>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+            <span>⚠️</span>
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-gray-300 text-xs font-semibold uppercase tracking-wider mb-2" htmlFor="email">
+              Email Address
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+              required
+            />
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-gray-300 text-xs font-semibold uppercase tracking-wider" htmlFor="password">
+                Password
+              </label>
+            </div>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-brand-600/20 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-darkbg disabled:opacity-50"
+          >
+            {loading ? 'Logging in...' : 'Sign In'}
+          </button>
+        </form>
+
+        <div className="mt-8 pt-6 border-t border-white/5 text-center">
+          <p className="text-gray-400 text-sm">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-brand-400 hover:text-brand-300 font-semibold transition-colors">
+              Register here
+            </Link>
+          </p>
+        </div>
+
+        {/* Demo credentials box */}
+        <div className="mt-6 p-4 rounded-xl bg-brand-500/5 border border-brand-500/10 text-xs text-gray-400">
+          <span className="font-semibold text-brand-300 block mb-1">💡 Seed Credentials for Local Test:</span>
+          <div>Email: <code className="text-white">aisha@example.com</code> or <code className="text-white">rohan@example.com</code></div>
+          <div>Password: <code className="text-white">password123</code></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;

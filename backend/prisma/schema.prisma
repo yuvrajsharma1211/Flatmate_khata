@@ -1,0 +1,208 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum SplitType {
+  equal
+  unequal
+  percentage
+  share
+}
+
+enum ExpenseStatus {
+  active
+  voided
+}
+
+enum SourceType {
+  manual
+  import
+}
+
+enum AnomalyStatus {
+  auto_resolved
+  pending_approval
+  approved
+  rejected
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  email         String   @unique @db.VarChar(150)
+  password_hash String   @db.VarChar(255)
+  created_at    DateTime @default(now()) @db.Timestamp()
+
+  groups_created        Group[]         @relation("GroupCreator")
+  group_memberships     GroupMember[]
+  batches_imported      ImportBatch[]   @relation("BatchImporter")
+  expenses_paid         Expense[]       @relation("ExpensePayer")
+  expenses_created      Expense[]       @relation("ExpenseCreator")
+  expense_splits        ExpenseSplit[]
+  settlements_paid      Settlement[]    @relation("SettlementPayer")
+  settlements_received  Settlement[]    @relation("SettlementRecipient")
+  settlements_created   Settlement[]    @relation("SettlementCreator")
+  anomalies_reviewed    ImportAnomaly[] @relation("AnomalyReviewer")
+
+  @@map("users")
+}
+
+model Group {
+  id             Int           @id @default(autoincrement())
+  name           String        @db.VarChar(100)
+  base_currency  String        @default("INR") @db.VarChar(3)
+  created_by     Int?
+  created_at     DateTime      @default(now()) @db.Timestamp()
+
+  creator        User?         @relation("GroupCreator", fields: [created_by], references: [id], onDelete: SetNull)
+  members        GroupMember[]
+  settings       Setting[]
+  batches        ImportBatch[]
+  expenses       Expense[]
+  settlements    Settlement[]
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id        Int       @id @default(autoincrement())
+  group_id  Int
+  user_id   Int
+  role      String    @default("member") @db.VarChar(20)
+  joined_at DateTime  @db.Date
+  left_at   DateTime? @db.Date
+
+  group     Group     @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([group_id, user_id, joined_at])
+  @@map("group_members")
+}
+
+model Setting {
+  id        Int    @id @default(autoincrement())
+  group_id  Int
+  key       String @db.VarChar(50)
+  value     String @db.VarChar(100)
+
+  group     Group  @relation(fields: [group_id], references: [id], onDelete: Cascade)
+
+  @@unique([group_id, key])
+  @@map("settings")
+}
+
+model ImportBatch {
+  id           Int             @id @default(autoincrement())
+  group_id     Int?
+  filename     String?         @db.VarChar(255)
+  imported_by  Int?
+  imported_at  DateTime        @default(now()) @db.Timestamp()
+  status       String          @default("pending_review") @db.VarChar(20)
+
+  group        Group?          @relation(fields: [group_id], references: [id], onDelete: SetNull)
+  importer     User?           @relation("BatchImporter", fields: [imported_by], references: [id], onDelete: SetNull)
+  expenses     Expense[]
+  settlements  Settlement[]
+  anomalies    ImportAnomaly[]
+
+  @@map("import_batches")
+}
+
+model Expense {
+  id                 Int             @id @default(autoincrement())
+  group_id           Int
+  description        String          @db.VarChar(255)
+  expense_date       DateTime        @db.Date
+  currency           String          @db.VarChar(3)
+  original_amount    Decimal         @db.Decimal(12, 2)
+  exchange_rate      Decimal         @default(1) @db.Decimal(10, 4)
+  amount_base        Decimal         @db.Decimal(12, 2)
+  paid_by            Int
+  split_type         SplitType
+  status             ExpenseStatus   @default(active)
+  source             SourceType      @default(manual)
+  import_batch_id    Int?
+  source_row_number  Int?
+  notes              String?         @db.Text
+  created_by         Int?
+  created_at         DateTime        @default(now()) @db.Timestamp()
+  updated_at         DateTime        @default(now()) @db.Timestamp() @updatedAt
+
+  group              Group           @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  payer              User            @relation("ExpensePayer", fields: [paid_by], references: [id], onDelete: Cascade)
+  creator            User?           @relation("ExpenseCreator", fields: [created_by], references: [id], onDelete: SetNull)
+  batch              ImportBatch?    @relation(fields: [import_batch_id], references: [id], onDelete: SetNull)
+  splits             ExpenseSplit[]
+  anomalies          ImportAnomaly[] @relation("AnomalyLinkedExpense")
+
+  @@map("expenses")
+}
+
+model ExpenseSplit {
+  id           Int      @id @default(autoincrement())
+  expense_id   Int
+  user_id      Int
+  raw_value    Decimal? @db.Decimal(10, 4)
+  owed_amount  Decimal  @db.Decimal(12, 2)
+
+  expense      Expense  @relation(fields: [expense_id], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([expense_id, user_id])
+  @@map("expense_splits")
+}
+
+model Settlement {
+  id                 Int         @id @default(autoincrement())
+  group_id           Int
+  paid_by            Int
+  paid_to            Int
+  amount_base        Decimal     @db.Decimal(12, 2)
+  currency           String      @default("INR") @db.VarChar(3)
+  original_amount    Decimal?    @db.Decimal(12, 2)
+  exchange_rate      Decimal?    @default(1) @db.Decimal(10, 4)
+  settled_at         DateTime    @db.Date
+  notes              String?     @db.Text
+  source             SourceType  @default(manual)
+  import_batch_id    Int?
+  source_row_number  Int?
+  created_by         Int?
+  created_at         DateTime    @default(now()) @db.Timestamp()
+
+  group              Group        @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  payer              User         @relation("SettlementPayer", fields: [paid_by], references: [id], onDelete: Cascade)
+  recipient          User         @relation("SettlementRecipient", fields: [paid_to], references: [id], onDelete: Cascade)
+  creator            User?        @relation("SettlementCreator", fields: [created_by], references: [id], onDelete: SetNull)
+  batch              ImportBatch? @relation(fields: [import_batch_id], references: [id], onDelete: SetNull)
+  anomalies          ImportAnomaly[] @relation("AnomalyLinkedSettlement")
+
+  @@map("settlements")
+}
+
+model ImportAnomaly {
+  id                    Int           @id @default(autoincrement())
+  import_batch_id       Int
+  row_number            Int
+  raw_row               Json
+  anomaly_types         String[]      
+  description           String        @db.Text
+  proposed_action       String        @db.Text
+  final_action          String?       @db.Text
+  status                AnomalyStatus @default(pending_approval)
+  linked_expense_id     Int?
+  linked_settlement_id  Int?
+  reviewed_by           Int?
+  reviewed_at           DateTime?     @db.Timestamp()
+
+  batch                 ImportBatch   @relation(fields: [import_batch_id], references: [id], onDelete: Cascade)
+  expense               Expense?      @relation("AnomalyLinkedExpense", fields: [linked_expense_id], references: [id], onDelete: SetNull)
+  settlement            Settlement?   @relation("AnomalyLinkedSettlement", fields: [linked_settlement_id], references: [id], onDelete: SetNull)
+  reviewer              User?         @relation("AnomalyReviewer", fields: [reviewed_by], references: [id], onDelete: SetNull)
+
+  @@map("import_anomalies")
+}
